@@ -1,33 +1,9 @@
 import hashlib
 import json
 import os
-import random
-import threading
 import time
 import requests
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from dotenv import load_dotenv
 from playwright.sync_api import sync_playwright
-
-# --- SERWER HEALTH CHECK DLA DARMOWEGO RENDER WEB SERVICE ---
-class HealthCheckHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b"Bot is active and running 24/7!")
-
-    # Wyciszenie logów zapytań HTTP w konsoli
-    def log_message(self, format, *args):
-        return
-
-def start_health_check_server():
-    port = int(os.getenv("PORT", "10000"))
-    server = HTTPServer(("0.0.0.0", port), HealthCheckHandler)
-    print(f"[i] Uruchomiono serwer Health Check na porcie {port}")
-    server.serve_forever()
-
-# Uruchomienie serwera HTTP w osobnym wątku
-threading.Thread(target=start_health_check_server, daemon=True).start()
 
 # Ustawienia ze zmiennych środowiskowych. PAGES i KEYWORDS podajemy po przecinku.
 PAGES = [u.strip() for u in os.getenv("PAGES").split(",") if u.strip()]
